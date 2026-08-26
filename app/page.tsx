@@ -2,6 +2,37 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "What is bunexdiv?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "bunexdiv is a URL shortener that helps people turn long links into cleaner, shareable links for posts, campaigns, and everyday communication.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How does it work?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Users paste a long URL, the system generates a short link, and they can copy it for sharing.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Why use a URL shortener?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Shortened links are cleaner, easier to share, and more readable across social platforms, messaging apps, and marketing campaigns.",
+      },
+    },
+  ],
+};
+
 export default function Home() {
   const [url, setUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
@@ -80,28 +111,38 @@ export default function Home() {
   };
 
   return (
-    <main className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-linear-to-br from-purple-300 via-white to-pink-300 px-4 py-8 text-slate-950 sm:px-8 sm:py-12 lg:px-12 xl:px-20 2xl:px-28 3xl:px-40">
-      <div className="pointer-events-none absolute -left-24 top-12 h-56 w-56 rounded-full bg-cyan-300/35 blur-3xl sm:h-72 sm:w-72 lg:-left-20 lg:top-20 xl:h-96 xl:w-96 2xl:h-120 2xl:w-120" />
-      <div className="pointer-events-none absolute -right-20 bottom-0 h-64 w-64 rounded-full bg-amber-200/60 blur-3xl sm:h-80 sm:w-80 lg:-right-16 xl:h-104 xl:w-104 2xl:h-136 2xl:w-136" />
+    <main
+      className="relative flex h-screen max-h-screen items-center justify-center overflow-hidden bg-linear-to-br from-purple-300 via-white to-pink-300 px-4 py-6 text-slate-950 sm:px-8 lg:px-12"
+      aria-label="bunexdiv home page">
+      <div className="pointer-events-none absolute -left-24 top-12 h-56 w-56 rounded-full bg-cyan-300/35 blur-3xl sm:h-72 sm:w-72 lg:-left-20 lg:top-20" />
+      <div className="pointer-events-none absolute -right-20 bottom-0 h-64 w-64 rounded-full bg-amber-200/60 blur-3xl sm:h-80 sm:w-80 lg:-right-16" />
 
-      <section className="relative w-full max-w-xl text-center sm:max-w-2xl lg:max-w-3xl xl:max-w-5xl 2xl:max-w-6xl 3xl:max-w-7xl">
-        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/55 px-3 py-2 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-cyan-700 shadow-sm backdrop-blur-sm sm:mb-7 sm:px-4 sm:text-xs xl:mb-9 xl:px-5 xl:py-2.5 2xl:mb-10">
+      <section className="relative w-full max-w-4xl text-center">
+        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/55 px-3 py-2 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-cyan-700 shadow-sm backdrop-blur-sm sm:px-4 sm:text-xs">
           <span className="h-2 w-2 rounded-full bg-cyan-500" />
           Quick link maker
         </div>
 
-        <h1 className="font-sans text-4xl font-black tracking-tight text-slate-900 sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl 3xl:text-[10rem]">
-          Make links <span className="text-cyan-600">lighter.</span>
+        <h1 className="font-sans text-[clamp(3rem,7vw,5.5rem)] font-black tracking-tight text-slate-900 leading-[0.9]">
+          Shorten long URLs into{" "}
+          <span className="text-cyan-600">cleaner links.</span>
         </h1>
+
+        <p className="mx-auto mt-4 max-w-2xl text-sm text-slate-700 sm:text-base lg:text-lg">
+          bunexdiv helps you shorten long links for social posts, campaigns, and
+          everyday sharing without losing clarity.
+        </p>
+
         <form
           onSubmit={handleSave}
           aria-busy={isLoading}
-          className="mx-auto mt-7 w-full max-w-xl rounded-3xl border-2 border-cyan-400/70 bg-white/85 p-3 text-left shadow-2xl shadow-cyan-900/15 ring-4 ring-white/60 backdrop-blur-md sm:mt-10 sm:max-w-2xl sm:p-4 xl:mt-10 xl:max-w-3xl xl:rounded-4xl xl:p-5 2xl:mt-14 2xl:max-w-5xl 2xl:p-6">
+          aria-label="Shorten a URL"
+          className="mx-auto mt-7 w-full max-w-xl rounded-3xl border-2 border-cyan-400/70 bg-white/85 p-3 text-left shadow-2xl shadow-cyan-900/15 ring-4 ring-white/60 backdrop-blur-md sm:p-4 xl:rounded-4xl xl:p-5">
           <div className="mb-2 px-1 sm:px-2">
             <label
               htmlFor="url-input"
               className="text-sm font-bold text-slate-800 sm:text-base">
-              URL
+              Paste a long URL
             </label>
           </div>
           <div className="flex flex-col gap-3 md:flex-row md:gap-4">
@@ -118,12 +159,12 @@ export default function Home() {
                 setCopied(false);
               }}
               placeholder="https://your-long-url.com/..."
-              className="h-16 min-w-0 flex-1 rounded-2xl border-2 border-purple-200 bg-white px-4 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100 sm:h-14 sm:px-5 sm:text-base xl:h-15 xl:px-6 xl:text-lg 2xl:h-18"
+              className="h-16 min-w-0 flex-1 rounded-2xl border-2 border-purple-200 bg-white px-4 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100 sm:h-14 sm:px-5 sm:text-base"
             />
             <button
               type="submit"
               disabled={!url.trim() || isLoading}
-              className="h-14 rounded-2xl bg-cyan-600 px-7 text-base font-bold text-white shadow-lg shadow-cyan-600/20 transition hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-200 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none md:min-w-36 xl:h-15 xl:px-9 xl:text-lg 2xl:h-18">
+              className="h-14 rounded-2xl bg-cyan-600 px-7 text-base font-bold text-white shadow-lg shadow-cyan-600/20 transition hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-200 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none md:min-w-36">
               {isLoading ? "Shortening..." : "Shorten URL"}
             </button>
           </div>
@@ -134,10 +175,10 @@ export default function Home() {
           </p>
         </form>
 
-        <div className="mx-auto mt-5 min-h-36 w-full max-w-xl sm:min-h-28 sm:max-w-2xl xl:max-w-3xl">
+        <div className="mx-auto mt-5 min-h-36 w-full max-w-xl sm:max-w-2xl">
           {shortUrl && (
             <section
-              className="w-full rounded-3xl border border-amber-300/80 bg-amber-50/90 p-3 text-left shadow-xl shadow-amber-900/10 sm:p-4 xl:p-5"
+              className="w-full rounded-3xl border border-amber-300/80 bg-amber-50/90 p-3 text-left shadow-xl shadow-amber-900/10 sm:p-4"
               aria-live="polite">
               <p className="mb-2 px-1 text-xs font-bold uppercase tracking-[0.18em] text-amber-700 sm:px-2">
                 Your short URL
@@ -163,6 +204,11 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
     </main>
   );
 }
