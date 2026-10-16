@@ -72,26 +72,32 @@ export default function Home() {
     setCopied(false);
     setIsLoading(true);
 
-    try {
-      const response = await fetch(
-        String(process.env.NEXT_PUBLIC_GENERATION_API_URL),
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: url.trim() }),
-        },
-      );
-      const result = (await response.json()) as {
-        message?: string;
-        data?: { shortUrl?: string };
-      };
+   try {
+  const apiUrl = String(process.env.NEXT_PUBLIC_GENERATION_API_URL);
+  
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url: url.trim() }),
+  });
+  
+  const result = (await response.json()) as {
+    message?: string;
+    data?: { shortUrl?: string; shortcode?: string };
+  };
 
-      if (!response.ok || !result.data?.shortUrl) {
-        throw new Error(result.message ?? "Unable to shorten this URL.");
-      }
+  if (!response.ok || !result.data?.shortcode) {
+    throw new Error(result.message ?? "Unable to shorten this URL.");
+  }
 
-      setShortUrl(result.data.shortUrl);
-    } catch (requestError) {
+  const shortcode = result.data.shortcode;
+  
+  // Extract base domain before '/api' and append the shortcode
+  const baseUrl = apiUrl.split("/api")[0];
+  const newUrl = `${baseUrl}/${shortcode}`;
+
+  setShortUrl(newUrl);
+} catch (requestError) {
       setError(
         requestError instanceof Error
           ? requestError.message
